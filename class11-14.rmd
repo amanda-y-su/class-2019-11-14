@@ -1,0 +1,56 @@
+---
+title: "Class 11/14"
+author: "Amanda Su"
+date: "11/14/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(googlesheets4)
+library(broom)
+
+sheets_deauth()
+x <- read_sheet("1QA_Xv9tAbKhwFdQpnVa2hTjhEdg5zAl4WY5EVanWSo0")
+
+```
+
+
+```{r}
+x %>%
+  ggplot(aes(dem_adv, dvote)) +
+  geom_jitter(height = 0.1, width = 0.1, alpha = 0.1) +
+  geom_smooth(method = "lm", se = FALSE)
+
+#potential outcome is what you would do in one situation and another situation
+```
+
+## how do we interpret these numbers 
+
+```{r}
+
+model <- glm(dvote ~ female, data = x, family = "binomial")
+
+print(model)
+summary(model)
+        
+model %>% 
+  tidy()
+
+#lm extends beyond 0 and 1, but glm limits it to between 0 and 1
+```
+
+## graphical relationship bewteen dvote and female
+
+```{r}
+x %>%
+  ggplot(aes(female, dvote)) + 
+  geom_jitter(height = 0.1, width = 0.1, alpha = 0.1) + 
+  geom_smooth(method = "glm", se = FALSE)
+
+```
+
